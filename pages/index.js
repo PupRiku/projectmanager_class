@@ -389,12 +389,12 @@ export default function ProjectManager() {
                       onChange={event => setTotal(event.target.value)}
                     />
                   </Grid>
-                  <Grid item>
+                  <Grid item style={{ alignSelf: "flex-end" }}>
                     <Grid
                       item
                       container
                       direction="column"
-                      style={{ marginTop: "5em", alignItems: "flex-end" }}
+                      style={{ marginTop: "5em" }}
                     >
                       <Grid item>
                         <Typography variant="h4">Users</Typography>
@@ -435,31 +435,31 @@ export default function ProjectManager() {
                           />
                         </RadioGroup>
                       </Grid>
-                      <Grid item style={{ marginTop: "5em" }}>
-                        <Select
-                          MenuProps={{
-                            style: { zIndex: 1302 },
-                            getContentAnchorEl: () => null,
-                          }}
-                          labelId="features"
-                          style={{ width: "12em" }}
-                          id="features"
-                          multiple
-                          displayEmpty
-                          renderValue={
-                            features.length > 0 ? undefined : () => "Features"
-                          }
-                          value={features}
-                          onChange={event => setFeatures(event.target.value)}
-                        >
-                          {featureOptions.map(option => (
-                            <MenuItem key={option} value={option}>
-                              {option}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </Grid>
                     </Grid>
+                  </Grid>
+                  <Grid item style={{ marginTop: "5em" }}>
+                    <Select
+                      MenuProps={{
+                        style: { zIndex: 1302 },
+                        getContentAnchorEl: () => null,
+                      }}
+                      labelId="features"
+                      style={{ width: "12em" }}
+                      id="features"
+                      multiple
+                      displayEmpty
+                      renderValue={
+                        features.length > 0 ? undefined : () => "Features"
+                      }
+                      value={features}
+                      onChange={event => setFeatures(event.target.value)}
+                    >
+                      {featureOptions.map(option => (
+                        <MenuItem key={option} value={option}>
+                          {option}
+                        </MenuItem>
+                      ))}
+                    </Select>
                   </Grid>
                 </Grid>
               </Grid>
