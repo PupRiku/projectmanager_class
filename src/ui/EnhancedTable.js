@@ -2,24 +2,32 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { lighten, makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
-import Checkbox from "@material-ui/core/Checkbox";
-import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
-import DeleteIcon from "@material-ui/icons/Delete";
-import FilterListIcon from "@material-ui/icons/FilterList";
-import Snackbar from "@material-ui/core/Snackbar";
-import Button from "@material-ui/core/Button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TablePagination,
+  TableRow,
+  TableSortLabel,
+  Toolbar,
+  Typography,
+  Paper,
+  Checkbox,
+  IconButton,
+  Tooltip,
+  Snackbar,
+  Button,
+  Menu,
+  MenuItem,
+  TextField,
+  InputAdornment,
+} from "@material-ui/core";
+import {
+  Delete as DeleteIcon,
+  FilterList as FilterListIcon,
+} from "@material-ui/icons";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -137,6 +145,22 @@ const useToolbarStyles = makeStyles(theme => ({
   title: {
     flex: "1 1 100%",
   },
+  menu: {
+    "&:hover": {
+      backgroundColor: "#fff",
+    },
+    "&.Mui-focusVisible": {
+      backgroundColor: "#fff",
+    },
+  },
+  totalFilter: {
+    fontSize: "2rem",
+    color: theme.palette.common.orange,
+  },
+  dollarSign: {
+    fontSize: "1.5rem",
+    color: theme.palette.common.orange,
+  },
 }));
 
 const EnhancedTableToolbar = props => {
@@ -144,11 +168,25 @@ const EnhancedTableToolbar = props => {
   const { numSelected } = props;
 
   const [undo, setUndo] = useState([]);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [openMenu, setOpenMenu] = useState(false);
+  const [totalFilter, setTotalFilter] = useState(">");
+  const [filterPrice, setFilterPrice] = useState("");
   const [alert, setAlert] = useState({
     open: false,
     color: "#ff3232",
-    message: "Row deleted!",
+    message: "Row(s) deleted!",
   });
+
+  const handleClick = e => {
+    setAnchorEl(e.currentTarget);
+    setOpenMenu(true);
+  };
+
+  const handleClose = e => {
+    setAnchorEl(null);
+    setOpenMenu(false);
+  };
 
   const onDelete = () => {
     const newRows = [...props.rows];
@@ -173,6 +211,44 @@ const EnhancedTableToolbar = props => {
     Array.prototype.push.apply(newRows, ...redo);
 
     props.setRows(newRows);
+  };
+
+  const handleTotalFilter = event => {
+    setFilterPrice(event.target.value);
+
+    if (event.target.value !== "") {
+      const newRows = [...props.rows];
+      newRows.map(row =>
+        eval(
+          `${event.target.value} ${
+            totalFilter === "=" ? "===" : totalFilter
+          } ${row.total.slice(1, row.total.length)} `
+        )
+          ? (row.search = true)
+          : (row.search = false)
+      );
+      props.setRows(newRows);
+    } else {
+      const newRows = [...props.rows];
+      newRows.map(row => (row.search = true));
+      props.setRows(newRows);
+    }
+  };
+
+  const filterChange = operator => {
+    if (filterPrice !== "") {
+      const newRows = [...props.rows];
+      newRows.map(row =>
+        eval(
+          `${filterPrice} ${
+            operator === "=" ? "===" : operator
+          } ${row.total.slice(1, row.total.length)} `
+        )
+          ? (row.search = true)
+          : (row.search = false)
+      );
+      props.setRows(newRows);
+    }
   };
 
   return (
@@ -202,7 +278,7 @@ const EnhancedTableToolbar = props => {
         </Tooltip>
       ) : (
         <Tooltip title="Filter list">
-          <IconButton aria-label="filter list">
+          <IconButton aria-label="filter list" onClick={handleClick}>
             <FilterListIcon style={{ fontSize: 50 }} color="secondary" />
           </IconButton>
         </Tooltip>
@@ -226,6 +302,55 @@ const EnhancedTableToolbar = props => {
           </Button>
         }
       />
+      <Menu
+        id="simple-menu"
+        anchorEl={anchorEl}
+        open={openMenu}
+        onClose={handleClose}
+        elevation={0}
+        style={{ zIndex: 1302 }}
+        keepMounted
+      >
+        <MenuItem classes={{ root: classes.menu }}>
+          <TextField
+            value={filterPrice}
+            onChange={handleTotalFilter}
+            placeholder="Enter a price to filter"
+            InputProps={{
+              type: "number",
+              startAdornment: (
+                <InputAdornment position="start">
+                  <span className={classes.dollarSign}>$</span>
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment
+                  onClick={() => {
+                    setTotalFilter(
+                      totalFilter === ">"
+                        ? "<"
+                        : totalFilter === "<"
+                        ? "="
+                        : ">"
+                    );
+                    filterChange(
+                      totalFilter === ">"
+                        ? "<"
+                        : totalFilter === "<"
+                        ? "="
+                        : ">"
+                    );
+                  }}
+                  position="end"
+                  style={{ cursor: "pointer" }}
+                >
+                  <span className={classes.totalFilter}>{totalFilter}</span>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </MenuItem>
+      </Menu>
     </Toolbar>
   );
 };
