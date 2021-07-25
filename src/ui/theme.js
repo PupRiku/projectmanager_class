@@ -106,6 +106,19 @@ export default createTheme({
         },
       },
     },
+    MuiTableSortLabel: {
+      root: {
+        "&.MuiTableSortLabel-active": {
+          color: arcOrange,
+        },
+        "&:hover": {
+          color: arcOrange,
+        },
+      },
+      icon: {
+        fill: arcOrange,
+      },
+    },
     MuiFormControlLabel: {
       label: {
         color: arcBlue,
