@@ -102,10 +102,32 @@ export default function ProjectManager() {
     createData(
       "Steve Jobs",
       "2/13/21",
-      "Custom Software",
+      "Mobile App",
       "Photo/Video, File Transfer, Users/Authentication, File Transfer",
       "Low",
-      "Web Application",
+      "iOS, Android",
+      "10-100",
+      "$2050",
+      true
+    ),
+    createData(
+      "Albert Einstein",
+      "5/13/21",
+      "Mobile App",
+      "Photo/Video, File Transfer, Users/Authentication, File Transfer",
+      "Low",
+      "Android",
+      "10-100",
+      "$2050",
+      true
+    ),
+    createData(
+      "Chris Diorio",
+      "4/20/21",
+      "Mobile App",
+      "Photo/Video, File Transfer, Users/Authentication, File Transfer",
+      "Low",
+      "iOS",
       "10-100",
       "$2050",
       true
@@ -267,7 +289,16 @@ export default function ProjectManager() {
           </FormGroup>
         </Grid>
         <Grid item style={{ marginTop: "5em", marginBottom: "35em" }}>
-          <EnhancedTable rows={rows} page={page} setPage={setPage} setRows={setRows} />
+          <EnhancedTable
+            rows={rows}
+            page={page}
+            setPage={setPage}
+            setRows={setRows}
+            websiteChecked={websiteChecked}
+            iOSChecked={iOSChecked}
+            androidChecked={androidChecked}
+            softwareChecked={softwareChecked}
+          />
         </Grid>
         <Dialog
           fullWidth
