@@ -20,7 +20,6 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import Snackbar from "@material-ui/core/Snackbar";
 import Button from "@material-ui/core/Button";
-import { CHAR_VERTICAL_LINE } from "picomatch/lib/constants";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
